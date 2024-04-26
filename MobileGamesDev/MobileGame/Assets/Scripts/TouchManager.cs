@@ -5,7 +5,6 @@ using UnityEditor;
 using UnityEngine;
 
 
-//Need to move selected object function into I_Interactable & need to move other parts to gestureScript and I_Interactable
 public class TouchManager : MonoBehaviour
 {
     private float timer;
@@ -14,18 +13,27 @@ public class TouchManager : MonoBehaviour
     GestureManagerScript actOn;
     private float dist;
     private bool dragging = false;
-    private Vector3 offset;
+    private bool rotating = false;
+    private Vector2 dragStartPosition;
     private Transform objectToDrag;
+    [SerializeField]
+    
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        actOn = FindObjectOfType<GestureManagerScript>();
+        actOn = FindFirstObjectByType<GestureManagerScript>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        print(Input.touchCount);
+        if (Input.touchCount == 0)
+        {
+            return;
+        }
         Touch touch = Input.touches[0];
         Vector3 posTouched = touch.position;
         Ray ray = Camera.main.ScreenPointToRay(posTouched);
@@ -39,34 +47,61 @@ public class TouchManager : MonoBehaviour
      
         foreach (Touch t in Input.touches)
             {
-                switch (t.phase)
-                {
-                    case TouchPhase.Began:
-                        timer = 0f;
-                        hasMoved = false;
-                        print(Input.touchCount);
-                       
-                        if (Physics.Raycast(ray, out hit))
+            switch (t.phase)
+            {
+                case TouchPhase.Began:
+                    timer = 0f;
+                    hasMoved = false;
+                    print(Input.touchCount);
+                    if (Physics.Raycast(ray, out hit))
+                    {
+                        if (hit.collider.GetComponent(typeof(I_Interactable)))
                         {
-                            if (hit.collider.GetComponent(typeof(I_Interactable)))
-                            {
                             objectToDrag = hit.transform;
-                            dist = Vector3.Distance( hit.transform.position,  Camera.main.transform.position);
+                            dist = Vector3.Distance(hit.transform.position, Camera.main.transform.position);
                             dragging = true;
+                        }
+
+                    }
+                    break;
+                case TouchPhase.Moved:
+                    hasMoved = true;
+                    print("moved");
+                    
+                            if (Input.touchCount == 2)
+                            {
+                                // Get the positions of both touches
+                                Touch touch1 = Input.GetTouch(0);
+                                Touch touch2 = Input.GetTouch(1);
+
+                                // Check if the first touch is stationary
+                                if (touch1.phase == TouchPhase.Stationary && touch2.phase == TouchPhase.Moved)
+                                {
+                                    // Calculate the position change of the second touch relative to the first touch
+                                    Vector2 deltaTouchPosition = touch2.position - touch2.deltaPosition - touch1.position;
+
+                                    // Rotate the object based on the change in position
+                                    actOn.rotateAt(deltaTouchPosition);
+                                }
+
                             }
-                        }
+
+                            if (!rotating && !dragging && Vector2.Distance(t.position, dragStartPosition) > 1)
+                            {
+                                rotating = true;
+                            }
+
+                            if (dragging && touch.phase == TouchPhase.Moved)
+                            {
+                                dragVec = new Vector3(Input.mousePosition.x, Input.mousePosition.y, dist);
+                                dragVec = Camera.main.ScreenToWorldPoint(dragVec);
+                                actOn.dragAt(t.position);
+                            }
+                            actOn.scaleAt(t.position);
+                        
+                    
                     break;
-                    case TouchPhase.Moved:
-                        hasMoved = true;
-                        print("moved");
-                        if (dragging && touch.phase == TouchPhase.Moved)
-                        {
-                        dragVec = new Vector3(Input.mousePosition.x, Input.mousePosition.y, dist);
-                        dragVec = Camera.main.ScreenToWorldPoint(dragVec);
-                        objectToDrag.position = ray.GetPoint(dist);
-                        }
-                    break;
-                    case TouchPhase.Stationary:
+                case TouchPhase.Stationary:
                         timer += Time.deltaTime;
                         print("Stationary");
                         break;
@@ -84,11 +119,7 @@ public class TouchManager : MonoBehaviour
                     break;
                 }
 
-            }
-        //GetComponent<I_Interactable>().processDrag();
-        //GetComponent<I_Interactable>().processTap();
-        GetComponent<I_Interactable>().deselectedObject();
-        GetComponent<I_Interactable>().selectedObejct();
+        }
 
     }
 }

@@ -6,11 +6,12 @@ interface I_Interactable
 {
     void processTap();
 
-    void processDrag();
-
-
-    void selectedObejct();
+    void processDrag(Ray ray);
 
     void deselectedObject();
+
+    void processScale();
+
+    void processRotate();
 
 }
