@@ -1,0 +1,5 @@
+C:/Users/Paulk/OneDrive/Desktop/MobileGameDev/MobileGamesDev/MobileGame/.utmp/RelWithDebInfo/6h544271/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/Paulk/OneDrive/Desktop/MobileGameDev/MobileGamesDev/MobileGame/.utmp/RelWithDebInfo/6h544271/armeabi-v7a/CMakeFiles/rebuild_cache.dir
+C:/Users/Paulk/OneDrive/Desktop/MobileGameDev/MobileGamesDev/MobileGame/.utmp/RelWithDebInfo/6h544271/armeabi-v7a/FramePacing/CMakeFiles/swappywrapper.dir
+C:/Users/Paulk/OneDrive/Desktop/MobileGameDev/MobileGamesDev/MobileGame/.utmp/RelWithDebInfo/6h544271/armeabi-v7a/FramePacing/CMakeFiles/edit_cache.dir
+C:/Users/Paulk/OneDrive/Desktop/MobileGameDev/MobileGamesDev/MobileGame/.utmp/RelWithDebInfo/6h544271/armeabi-v7a/FramePacing/CMakeFiles/rebuild_cache.dir
