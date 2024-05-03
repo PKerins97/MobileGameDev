@@ -4,8 +4,6 @@ using System.Collections;
 public class GyroScript : MonoBehaviour
 
 {
-    private readonly float moveSpeed = 1f;
-   
 
     public bool isFlat = true;
     private Rigidbody rigid;
@@ -20,10 +18,7 @@ public class GyroScript : MonoBehaviour
 
         if (isFlat)
         {
-            
-            Quaternion moveObject = Quaternion.Euler(-tilt.y * moveSpeed * 90, tilt.x * moveSpeed * 90, 0);
-            transform.rotation = Quaternion.Lerp(transform.rotation, moveObject, Time.deltaTime * moveSpeed);
-
+            tilt = Quaternion.Euler(90, 0, 0) * tilt;
         }
         rigid.AddForce(tilt);
     }
